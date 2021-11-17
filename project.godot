@@ -1,0 +1,61 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Object",
+"class": "ChannelController",
+"language": "GDScript",
+"path": "res://src/conductor/channel_controller.gd"
+}, {
+"base": "Object",
+"class": "ChannelGroup",
+"language": "GDScript",
+"path": "res://src/conductor/channel_group.gd"
+}, {
+"base": "Object",
+"class": "ChannelGroupDefinition",
+"language": "GDScript",
+"path": "res://src/conductor/channel_group_definition.gd"
+}, {
+"base": "Object",
+"class": "TimingDefinition",
+"language": "GDScript",
+"path": "res://src/conductor/timing_definition.gd"
+}, {
+"base": "Object",
+"class": "TimingElement",
+"language": "GDScript",
+"path": "res://src/conductor/timing_element.gd"
+} ]
+_global_script_class_icons={
+"ChannelController": "",
+"ChannelGroup": "",
+"ChannelGroupDefinition": "",
+"TimingDefinition": "",
+"TimingElement": ""
+}
+
+[application]
+
+config/name="Godot Conductor"
+run/main_scene="res://src/demo.tscn"
+config/icon="res://icon.png"
+
+[autoload]
+
+Conductor="*res://src/conductor/conductor.tscn"
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+environment/default_environment="res://assets/default_env.tres"

@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/conductor/conductor.gd" type="Script" id=1]
+
+[node name="Conductor" type="Node"]
+script = ExtResource( 1 )
+
+[node name="Channel0" type="AudioStreamPlayer" parent="."]
+
+[node name="Channel1" type="AudioStreamPlayer" parent="."]
+
+[node name="Channel2" type="AudioStreamPlayer" parent="."]
+
+[node name="Channel3" type="AudioStreamPlayer" parent="."]
+
+[node name="Channel4" type="AudioStreamPlayer" parent="."]
+
+[node name="Channel5" type="AudioStreamPlayer" parent="."]
+
+[node name="Channel6" type="AudioStreamPlayer" parent="."]
+
+[node name="Channel7" type="AudioStreamPlayer" parent="."]

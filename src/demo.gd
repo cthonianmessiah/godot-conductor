@@ -1,12 +1,3 @@
-# godot-conductor
- Music conductor for track mixing and syncing game events to music beats.
-
-Playing music in Godot may be easy, but have you ever wanted to integrate the music right into your game mechanics?  With Godot Conductor, now you can!
-
-## Code Sample
-Here's a quick sample of how to use the Conductor.
-
-```
 extends Node2D
 # Demo of how to use the Conductor.
 
@@ -118,7 +109,3 @@ func _on_volume_changed(_value) -> void:
 			# that are in use, so if your audio has only one track, you only
 			# need to put a single number into this array.
 			[Slider1.value, Slider2.value, Slider3.value, Slider4.value])
-```
-
-Please send bug reports, questions or comments to cthonianmessiah@gmail.com or
-get in touch with me on the Godot discord (cthonianmessiah).
