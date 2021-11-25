@@ -10,10 +10,18 @@ Here's a quick sample of how to use the Conductor.
 extends Node2D
 # Demo of how to use the Conductor.
 
+enum RhythmState {
+	RED,
+	BLUE,
+	GREEN,
+}
+
 var Track0: AudioStream = preload("res://assets/demo_loop_t0.ogg")
 var Track1: AudioStream = preload("res://assets/demo_loop_t1.ogg")
 var Track2: AudioStream = preload("res://assets/demo_loop_t2.ogg")
 var Track3: AudioStream = preload("res://assets/demo_loop_t3.ogg")
+
+var _rhythm: Rhythm
 
 onready var Anim1: AnimationPlayer = $AnimationPlayer
 onready var Anim2: AnimationPlayer = $AnimationPlayer2
@@ -22,6 +30,8 @@ onready var Slider1: HSlider = $VBoxContainer/HSlider
 onready var Slider2: HSlider = $VBoxContainer/HSlider2
 onready var Slider3: HSlider = $VBoxContainer/HSlider3
 onready var Slider4: HSlider = $VBoxContainer/HSlider4
+
+onready var Sprite2: Sprite = $Sprite2
 
 
 func _ready() -> void:
@@ -56,9 +66,7 @@ func _ready() -> void:
 					4,
 					# The ID of the first beat, in case the song doesn't start
 					# on the first beat of a measure.
-					0)],
-				# The position in the song to start at.
-				0.0))
+					0)]))
 
 	# Swaps the most recently staged song with the currently playing song (if
 	# any) over a configurable period of time.  This will crossfade the active
@@ -76,25 +84,48 @@ func _ready() -> void:
 	
 	# To connect the conductor to your game events, just use the beat_played
 	# signal.
-	Conductor.connect("beat_played", self, "_on_beat")
+	assert(Conductor.connect("beat_played", self, "_on_beat") == 0,
+			"Could not connect to beat_played signal!")
+	
+	# You can generate more complex signals using the Rhythm abstraction.
+	_rhythm = Rhythm.new([ # Each Rhythm takes an array of RhythmElements
+			# RED state, changes on beat 0, no minimum duration
+			RhythmElement.new(RhythmState.RED, 0, 0),
+			# GREEN state, changes on beat 1, no minimum duration
+			RhythmElement.new(RhythmState.GREEN, 1, 0),
+			# BLUE state, changes on beat 2, no minimum duration
+			RhythmElement.new(RhythmState.BLUE, 2, 0),
+		],
+		# Start the rhythm on the first section (position 0 in the array)
+		0,
+		# Apply an offset of 0 to the conductor beat, you can use an offset to
+		# configure multiple instances of a rhythm-sensitive scene to trigger
+		# on different beats of the measure instead of always being in sync.
+		0)
+	
+	# The rhythm will pass the above enum values to the signal handler, which
+	# we use in this demo to control the color of the rhythm beat object.
+	assert(_rhythm.connect("rhythm_advanced", self, "_on_rhythm_advanced") == 0,
+			"Could not connect to rhythm_advanced signal!")
+
+
+func _exit_tree() -> void:
+	_rhythm.free()
 
 
 # Signal handler for music beats.  The int passed to the handler identifies
 # which beat in the measure just played.
 # Time resolution for this handler is the resolution of the _process callback.
-func _on_beat(beat: int) -> void:
+func _on_beat(_beat: int) -> void:
 	Anim1.stop()
 	Anim1.play("beat")
-	if beat % 2 == 0:
-		Anim2.stop()
-		Anim2.play("beat")
 
 
 # Here's an example of using a button to pause and play the background music.
 func _on_PlayPause_pressed() -> void:
-	# The playing() function returns true if the conductor is playing, otherwise
-	# it returns false.
-	if Conductor.playing():
+	# The playing property is true if the conductor is playing, otherwise it is
+	# false.
+	if Conductor.playing:
 		# Pauses playback at its current position.
 		# Uses a short audio fade to reduce audio artifacts.
 		Conductor.pause()
@@ -102,6 +133,21 @@ func _on_PlayPause_pressed() -> void:
 		# Resumes playback at the current position.
 		# Uses a short audio fade to reduce audio artifacts.
 		Conductor.play()
+
+
+# Signal handler for rhythm beats.  Each ID passed corresponds to the ID of an
+# element used to create the rhythm.  This can be used with enum values to
+# create a cycle of state machine changes that is synced to the music.
+func _on_rhythm_advanced(id: int) -> void:
+	Anim2.stop()
+	match id:
+		RhythmState.RED:
+			Anim2.play("beat_red")
+		RhythmState.GREEN:
+			Anim2.play("beat_green")
+		RhythmState.BLUE:
+			Anim2.play("beat_blue")
+
 
 # Here's an example of using the fade() function to change the audio balance
 # between different tracks in the same song.

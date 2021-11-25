@@ -2,7 +2,8 @@ class_name ChannelController
 extends Object
 # Wraps an AudioStreamPlayer with additional features like timed volume fading.
 
-var player: AudioStreamPlayer
+# The AudioStreamController managed by this stream controller.
+var player: AudioStreamPlayer setget , _get_player
 
 var _fade_source: float = 0.0
 var _fade_remaining_duration: float = 0.0
@@ -13,8 +14,10 @@ var _paused: bool = true
 var _unpaused_volume: float = 1.0
 
 
-func _init(player: AudioStreamPlayer) -> void:
-	self.player = player
+# To create a new ChannelController, pass an AudioStreamPlayer node that the
+# controller will manipulate.
+func _init(_player: AudioStreamPlayer) -> void:
+	player = _player
 
 
 func _notification(what: int) -> void:
@@ -34,6 +37,7 @@ func fade(target_volume: float, fade_duration: float,
 	_fade(target_volume, fade_duration, pause_after_fade)
 
 
+# Plays the audio at its current position in the track.
 func play() -> void:
 	if not _paused and player.playing:
 		return
@@ -42,6 +46,7 @@ func play() -> void:
 	_fade(_unpaused_volume, 0.1, false)
 
 
+# Pauses the audio at its current position in the track.
 func pause() -> void:
 	if _paused and not player.playing:
 		return
@@ -79,3 +84,7 @@ func _fade(target_volume: float, fade_duration: float,
 			player.volume_db = linear2db(target_volume)
 		if pause_after_fade:
 			player.stop()
+
+
+func _get_player() -> AudioStreamPlayer:
+	return player

@@ -5,23 +5,23 @@ extends Object
 const NO_BEAT = -1
 
 # The name of the currently loaded audio group.
-var name: String
+var name: String setget , _get_name
 
 # The ID of the currently playing section in the audio group.
-var section_id: int = 0
-
-var _channels: Array
+var section_id: int = 0 setget , _get_section_id
 
 var _active_channels: int = 0
+var _channels: Array
+var _current_timing: TimingElement
+var _last_checked_position: float = 0.0
+var _next_beat: int = 0
+var _next_beat_time: float = 0.0
 var _timings: Array = []
 var _total_length: float = 0.0
-var _current_timing: TimingElement
-var _next_beat_time: float = 0.0
-var _next_beat: int = 0
-var _last_checked_position: float = 0.0
 var _waiting_on_loop: bool = false
 
 
+# To create a new channel group, pass an array of channel controllers.
 func _init(channels: Array) -> void:
 	assert(channels.size() > 0, "Can't create a channel group with 0 channels.")
 	_channels = channels
@@ -62,7 +62,15 @@ func change(definition: ChannelGroupDefinition) -> void:
 	definition.free()
 
 
-# Returns the current audio playback position, in fractional seconds.
+# Gets the number of beats in the current section of the song.
+# If there is no valid song section active, returns 1 as a default.
+func current_measure() -> int:
+	if _current_timing == null:
+		return 1
+	return _current_timing.measure
+
+
+# Returns the current audio playback position, in seconds.
 func current_position() -> float:
 	if _active_channels <= 0:
 		return 0.0
@@ -152,8 +160,8 @@ func seek(position: float) -> void:
 		_current_timing = _timings[section_id]
 	var first_beat_time: float = _current_timing.start + _current_timing.offset
 	var first_beat: int = _current_timing.beat_offset
-	var beats_to_skip: int = ceil((position - first_beat_time)
-			/ _current_timing.beat_length)
+	var beats_to_skip: int = int(ceil((position - first_beat_time)
+			/ _current_timing.beat_length))
 	_next_beat_time = first_beat_time + beats_to_skip \
 			* _current_timing.beat_length
 	_next_beat = (first_beat + beats_to_skip) % _current_timing.measure
@@ -166,3 +174,11 @@ func seek(position: float) -> void:
 func update(delta: float) -> void:
 	for c in _channels:
 		c.update(delta)
+
+
+func _get_name() -> String:
+	return name
+
+
+func _get_section_id() -> int:
+	return section_id

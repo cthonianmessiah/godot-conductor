@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://src/demo.gd" type="Script" id=1]
 [ext_resource path="res://assets/circle.png" type="Texture" id=2]
@@ -113,6 +113,90 @@ tracks/1/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.501961 ) ]
 }
 
+[sub_resource type="Animation" id=5]
+resource_name = "beat_blue"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite2:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1.25, 1.25 ), Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite2:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 1, 1 ), Color( 1, 1, 1, 0.501961 ) ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "beat_green"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite2:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1.25, 1.25 ), Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite2:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0, 1, 0, 1 ), Color( 1, 1, 1, 0.501961 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "beat_red"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite2:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1.25, 1.25 ), Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite2:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 0.501961 ) ]
+}
+
 [node name="Demo" type="Node2D"]
 script = ExtResource( 1 )
 
@@ -191,6 +275,9 @@ anims/beat = SubResource( 2 )
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 3 )
 anims/beat = SubResource( 4 )
+anims/beat_blue = SubResource( 5 )
+anims/beat_green = SubResource( 6 )
+anims/beat_red = SubResource( 7 )
 
 [connection signal="pressed" from="VBoxContainer/PlayPause" to="." method="_on_PlayPause_pressed"]
 [connection signal="value_changed" from="VBoxContainer/HSlider" to="." method="_on_volume_changed"]
